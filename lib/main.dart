@@ -75,23 +75,55 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
+  Widget _buildSquareButton() {
+    return Expanded(
+      child: OutlinedButton(
+        onPressed: () {
+          setState(() {
+            try {
+              final expression = Expression.parse(_expression);
+              const evaluator = ExpressionEvaluator();
+              final result = evaluator.eval(expression, {});
+              _expression = (result * result).toString();
+              _result = ' = $_expression';
+            } catch (e) {
+              _result = ' Error';
+            }
+          });
+        },
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: Colors.black),
+          padding: const EdgeInsets.all(24),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+        ),
+        child: const Text(
+          'x²',
+          style: TextStyle(
+            fontSize: 24,
+            fontFamily: 'Times New Roman',
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 134, 62, 3),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Padding(
-            padding: EdgeInsets.only(top: 16.0),
-            child: Text(
-              'Calculator!',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Times New Roman',
-              ),
-            ),
+        title: const Text(
+          'Calculator!',
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Times New Roman',
           ),
         ),
+        centerTitle: true,
       ),
       body: Column(
         children: <Widget>[
@@ -153,6 +185,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   _buildButton('C'),
                   _buildButton('='),
                   _buildButton('+'),
+                ],
+              ),
+              Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // Center the button
+                children: [
+                  _buildSquareButton(), // Example: Add this special button to center it
                 ],
               ),
             ],
